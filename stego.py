@@ -1,6 +1,6 @@
 """
 Todo:
-Make it possible to retrieve message from file
+Make it possible to input other messagetypes. (Other images, videos, ...)
 Check if message is longer than image
 """
 
