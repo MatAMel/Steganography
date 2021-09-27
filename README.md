@@ -1,5 +1,7 @@
 # Steganography
-Steganography software to hide information in PNG images.
+Steganography software to hide information in PNG images.  
+IMPORTANT: This is not encryption. Anyone can see the message you write if they know where to look.  
+Steganography is meant to hide the fact that a message was sent in the first place.
 # Commands:
         --help Explanations for commands
         -e Extract hidden message in file
