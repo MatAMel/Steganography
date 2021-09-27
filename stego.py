@@ -9,6 +9,7 @@ import PIL.Image as Image
 from textwrap import wrap
 import sys
 import string
+from os.path import splitext
 
 #Message from user
 def inserted_message(string):
@@ -104,6 +105,13 @@ def read_stego_image(path):
     decoded_txt.close()
     
 
+def checkFile(path):
+    filename, extension = splitext(path)
+    if extension != ".png":
+        print(f"{extension} is not supported\nOnly PNG is supported!")
+        sys.exit()
+
+
 #Takes commands from command-line
 try:
     if len(sys.argv) == 1:
@@ -126,10 +134,12 @@ try:
 
     elif "-e" == sys.argv[1]:
         path = sys.argv[2]
+        checkFile(path)
         read_stego_image(path)
 
     elif "-i" == sys.argv[1] and "-m" == sys.argv[3]:
         path = sys.argv[2]
+        checkFile(path)
         string = sys.argv[4]
         message = inserted_message(string)
         message_binary(message)
