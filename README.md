@@ -4,8 +4,8 @@ IMPORTANT: This is not encryption. Anyone can see the message you write if they 
 Steganography is meant to hide the fact that a message was sent in the first place.
 # Commands:
         --help Explanations for commands
-        -e Extract hidden message in file
-        -i Input file to hide the secret message in
+        -e Extract hidden message from image
+        -i Input image to hide the secret message in
         -m The message you want to hide (MUST be in quotation marks AND from the ASCII printable set)
 
 The new image vil be named "hidden_image.png" and be placed in the same directory as the original image
