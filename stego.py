@@ -1,15 +1,15 @@
 """
 Todo:
 Make it possible to input other messagetypes. (Other images, videos, ...)
-Check if message is longer than image
 """
 
-
 import PIL.Image as Image
-from textwrap import wrap
-import sys
+import argparse
 import string
+from textwrap import wrap
 from os.path import splitext
+from sys import exit
+
 
 #Message from user
 def inserted_message(string):
@@ -37,7 +37,12 @@ def insert_message_to_image(path):
     for h in range(0, height):
         for w in range(0, width):
             listofRGB.append(img.getpixel((w, h))) 
-            
+    
+    #Checks if the message is longer than the image can support. If it is, terminate the program
+    if len(listofRGB)*3 < len(message_binary(message)):
+        print(f"ERROR\nMessage is too long.\nMessage length in binary:\t{len(message_binary(message))}\nLength of RGB pixel values:\t{len(listofRGB)*3}")
+        exit()        
+    
     #Make list of list
     list_listofRGB = []
     for x in listofRGB:
@@ -66,7 +71,7 @@ def insert_message_to_image(path):
 
 
 #Extracts the hidden message in the image
-def read_stego_image(path):
+def read_stego_image(path, output_message=False):
     img = Image.open(path).convert('RGB')
     width, height = img.size
     listofRGB = []
@@ -98,53 +103,59 @@ def read_stego_image(path):
             del text[index:]
         index += 1
     
-    print(str("".join(text)))
-    with open("decoded_message.txt", "w", encoding="ascii") as decoded_txt:
-        #decoded_txt.write(str("".join(text).encode("ascii")))
-        decoded_txt.write(str("".join(text)))
-    decoded_txt.close()
-    
-
+    if output_message:
+        with open("output_message.txt", "w") as output_file:
+            output_file.write(str("".join(text)))  
+    else:
+        print(str("".join(text)))
+ 
+   
+#Checks if filetype is supported    
 def checkFile(path):
     filename, extension = splitext(path)
-    if extension != ".png":
+    if extension.lower() != ".png":
         print(f"{extension} is not supported\nOnly PNG is supported!")
-        sys.exit()
+        exit()
 
 
-#Takes commands from command-line
-try:
-    if len(sys.argv) == 1:
-        print("No argument provided!\nEnter stego.py --help for help")
-        
-    elif "--help" == sys.argv[1]:
-        print("""
-        Steganography software to hide information in PNG images.
-        Commands:\n
-        --help Explanations for commands
-        -e Extract hidden message from image
-        -i Input image to hide the secret message in
-        -m The message you want to hide (MUST be in quotation marks AND from the ASCII printable set)
-        The new image vil be named "hidden_image.png" and be placed in the same directory as the original image\n
-        python stego.py -e [file to extract]
-        Example: python stego.py -e mysecretimage.png\n\n
-        python stego.py -i [input file] -m ["Message to hide in image"]
-        Example: python stego.py -i catimage.png -m "This text will be hidden"\n
-        """)
+#Command-line arguments
+parser = argparse.ArgumentParser(description="Hides and extracts text in images")
 
-    elif "-e" == sys.argv[1]:
-        path = sys.argv[2]
-        checkFile(path)
-        read_stego_image(path)
+parser.add_argument("-i", help="Input image (Requires [-m] or [-mf]), Example: [stego.py -i myfile.png -m \"MyMessage\"]", action="store", metavar='')
+parser.add_argument("-m", help="Message string (Must be enclosed in quotation marks and in the ASCII printable set)", action="store", metavar='')
+parser.add_argument("-mf", help="Message file, Example: [stego.py -i image.png -mf message.txt]", action="store", metavar='')
+parser.add_argument("-e", help="Extract message from image, Example: [stego.py -e image.png]", action="store", metavar='')
+parser.add_argument("-ef", help="Extract message from image to file (Don't set file), Example: [stego.py -e image.png -ef]", action="store_true")
 
-    elif "-i" == sys.argv[1] and "-m" == sys.argv[3]:
-        path = sys.argv[2]
-        checkFile(path)
-        string = sys.argv[4]
-        message = inserted_message(string)
-        message_binary(message)
-        insert_message_to_image(path)
-    else:
-        print("Invalid argument. Try again\nEnter stego.py --help for help")
-except IndexError:
-    print("Invalid argument. Try again\nEnter stego.py --help for help")
+args = parser.parse_args()
+
+if args.i and args.m:
+    path = args.i
+    checkFile(path)
+    string = args.m
+    message = inserted_message(string)
+    message_binary(message)
+    insert_message_to_image(path)
+    
+elif args.i and args.mf:
+    path = args.i
+    checkFile(path)
+    string = args.mf
+    with open(string, "r") as message_file:
+        string = message_file.read()
+    message = inserted_message(string)
+    message_binary(message)
+    insert_message_to_image(path)
+
+elif args.e and args.ef:
+    path = args.e
+    checkFile(path)
+    read_stego_image(path, args.ef)
+    
+elif args.e:
+    path = args.e
+    checkFile(path)
+    read_stego_image(path)
+    
+else:
+    print("Error\nTry again")
