@@ -19,10 +19,12 @@ The ASCII printable set is used because it presents the least amount of problems
 # How it works
 This python program takes the image and converts it into a list of RGB values for each pixel. These are numbers ranging from 0-255. These numbers are then converted to binary. The input message is also converted into binary. Then, every bit in the message is inserted in place of the least significant bit (LSB) from the RGB values. This effects the color of the image the least. The image is then saved and outputted.  
 To retrieve the information, the program converts the RGB values to binary and takes the LSB and appends it to a list. This list is then joined togheter and converted from binary to ASCII to form a string to be printed or written to a file.  
+NB: Could be really slow on large images
+
 
 There are improvments to make. For example, the program could switch the 2 LSB to cram even more information in the image. This would give a larger impact on the colors of the image, but probably not too much. I plan to make it a user option.  
-A better way to save the information would be to insert the message in random or set gaps. This would make it more difficult to retrieve the information for an advesary, but it presents the challenge on how the intended recipient would read the message.
-
+A better way to save the information would be to insert the message in random or set gaps. This would make it more difficult to retrieve the information for an advesary, but it presents the challenge on how the intended recipient would read the message.  
+NB: Could be really slow on large images
 
 # Example commands
 ## These commands are for inserting information in images  
