@@ -43,7 +43,7 @@ def insert_message_to_image(path):
         print(f"ERROR\nMessage is too long.\nMessage length in binary:\t{len(message_binary(message))}\nLength of RGB pixel values:\t{len(listofRGB)*3}")
         exit()        
     
-    #Makes list of list
+    #Makes list of lists
     list_listofRGB = []
     for x in listofRGB:
         list_listofRGB.append(list(x))
@@ -60,7 +60,7 @@ def insert_message_to_image(path):
             except IndexError:
                 break
     
-    #Make tuple list
+    #Makes list of tuples
     final_listRGB = []
     for x in list_listofRGB:
         final_listRGB.append(tuple(x))
