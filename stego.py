@@ -11,7 +11,7 @@ from os.path import splitext
 from sys import exit
 
 
-#Message from user
+#Formats the message from user
 def inserted_message(string):
     message = message_binary(string)
     for x in range(0, len(message)):
@@ -19,7 +19,7 @@ def inserted_message(string):
     return "".join(message)
 
 
-#Converts message string to binary
+#Converts messagestring to binary
 def message_binary(message):
     binary_message_list = []
     for b in bytearray(message, "ascii"):
@@ -27,13 +27,13 @@ def message_binary(message):
     return binary_message_list
 
 
-#Inserts the message into the picture provided by the user
+#Inserts the message in the picture provided by the user
 def insert_message_to_image(path):
     img = Image.open(path).convert('RGB')
     width, height = img.size
 
-    listofRGB = []
     #Scans from left to right, jumping down 1 pixel after each sweep
+    listofRGB = []
     for h in range(0, height):
         for w in range(0, width):
             listofRGB.append(img.getpixel((w, h))) 
@@ -48,6 +48,7 @@ def insert_message_to_image(path):
     for x in listofRGB:
         list_listofRGB.append(list(x))
 
+    #Replaces the LSB of the image and inserts the messagebit
     index = 0
     for x in list_listofRGB:
         for i in range(0, 3):
@@ -74,16 +75,19 @@ def insert_message_to_image(path):
 def read_stego_image(path, output_message=False):
     img = Image.open(path).convert('RGB')
     width, height = img.size
-    listofRGB = []
     
+    #Creates a list of tuples for each RGB value in the image
+    listofRGB = []
     for h in range(0, height):
         for w in range(0, width):
             listofRGB.append(img.getpixel((w, h)))
     
+    #Creates a new list of lists, instead of a list of tuples
     list_listofRGB = []
     for x in listofRGB:
         list_listofRGB.append(list(x))
     
+    #Extracts the binary message from image and appends it to a list
     binary_message = []
     for x in list_listofRGB:
         for i in range(0, 3):
@@ -92,6 +96,7 @@ def read_stego_image(path, output_message=False):
     #Joins bits to one long str, and then splits it into 8 bits in a list
     binary_message = wrap("".join(binary_message[:]), 8)     
     
+    #Converts the binary integers to characters
     text = []  
     for x in binary_message:
         text.append(chr(int(x, 2)))
@@ -103,6 +108,7 @@ def read_stego_image(path, output_message=False):
             del text[index:]
         index += 1
     
+    #Checks if the [-ef] option is set, and creates a file with the message if it is. If not, prints it to screen
     if output_message:
         with open("output_message.txt", "w") as output_file:
             output_file.write(str("".join(text)))  
