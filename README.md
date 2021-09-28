@@ -28,7 +28,7 @@ A better way to save the information would be to insert the message in random or
 ## These commands are for inserting information in images  
         python stego.py -i [imagename.png] -m ["Message"]
         python stego.py -i [imagename.png] -mf [/path/to/messagefile]
-### Example:
+#### Example:
         python stego.py -i myimage.png -m "Secret message"
         python stego.py -i myimage.png -mf mymessage.txt
 
@@ -36,7 +36,7 @@ A better way to save the information would be to insert the message in random or
 ## These commands are for extracting information from images  
         python stego.py -e [/path/to/file/you/want/extracted]
         python stego.py -e [/path/to/file/you/want/extracted] -ef
-### Example: 
+#### Example: 
         python stego.py -e mysecretimage.png
         python stego.py -e mysecretimage.png -ef
   
