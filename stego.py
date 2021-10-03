@@ -1,6 +1,6 @@
 """
 Todo:
-Make it possible to input other messagetypes. (Other images, videos, ...)
+Make it possible to input other message types. (Other images, videos, ...)
 """
 
 import PIL.Image as Image
