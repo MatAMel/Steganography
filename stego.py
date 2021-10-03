@@ -92,10 +92,17 @@ def read_stego_image(path, output_message=False):
     for x in list_listofRGB:
         for i in range(0, 3):
             binary_message.append(bin(x[i])[-1])
-    
-    #Joins bits to one long str, and then splits it into 8 bits in a list
-    binary_message = wrap("".join(binary_message[:]), 8)     
-    
+
+    #Makes new list of lists with bytes instead of bits, then joins them together to create strings of bytes
+    bytes_message = []
+    index = 0
+    for x in range(0, len(binary_message), 8):
+        bytes_message.append(binary_message[index:index+8])
+        index += 8
+    binary_message = []
+    for x in bytes_message:
+        binary_message.append("".join(x))
+     
     #Converts the binary integers to characters
     text = []  
     for x in binary_message:
