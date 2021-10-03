@@ -8,6 +8,7 @@ import argparse
 import string
 from textwrap import wrap
 from os.path import splitext
+from os.path import getsize
 from sys import exit
 
 
@@ -39,10 +40,11 @@ def insert_message_to_image(path):
             listofRGB.append(img.getpixel((w, h))) 
     
     #Checks if the message is longer than the image can support. If it is, terminate the program
-    if len(listofRGB)*3 < len(message_binary(message)):
-        print(f"ERROR\nMessage is too long.\nMessage length in binary:\t{len(message_binary(message))}\nLength of RGB pixel values:\t{len(listofRGB)*3}")
-        exit()        
-    
+    if args.i and args.mf:
+        if getsize(path) < getsize(string_path)*8:
+            print(f"ERROR\nMessage is too long.\nMessage length in binary:\t{getsize(string_path)*8}\nLength of RGB pixel values:\t{len(listofRGB)*3}")
+            exit() 
+
     #Makes list of lists
     list_listofRGB = []
     for x in listofRGB:
@@ -147,17 +149,15 @@ if args.i and args.m:
     checkFile(path)
     string = args.m
     message = inserted_message(string)
-    message_binary(message)
     insert_message_to_image(path)
     
 elif args.i and args.mf:
     path = args.i
     checkFile(path)
-    string = args.mf
-    with open(string, "r") as message_file:
+    string_path = args.mf
+    with open(string_path, "r") as message_file:
         string = message_file.read()
     message = inserted_message(string)
-    message_binary(message)
     insert_message_to_image(path)
 
 elif args.e and args.ef:
